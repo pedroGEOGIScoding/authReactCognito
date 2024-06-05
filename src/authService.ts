@@ -1,7 +1,12 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand } from "@aws-sdk/client-cognito-identity-provider";
+import {  CognitoIdentityProviderClient, 
+          InitiateAuthCommand,
+          SignUpCommand,
+          ConfirmSignUpCommand,
+          ForgotPasswordCommand,
+          ConfirmForgotPasswordCommand  } from "@aws-sdk/client-cognito-identity-provider";
 import config from "./config.json";
 
 export const cognitoClient = new CognitoIdentityProviderClient({
@@ -68,6 +73,40 @@ export const confirmSignUp = async (username: string, code: string) => {
     return true;
   } catch (error) {
     console.error("Error confirming sign up: ", error);
+    throw error;
+  }
+};
+
+export const forgotPassword = async (email: string) => {
+  const params = {
+    ClientId: config.clientId,
+    Username: email,
+  };
+  try {
+    const command = new ForgotPasswordCommand(params);
+    const response = await cognitoClient.send(command);
+    console.log("Forgot password request sent: ", response);
+    return response;
+  } catch (error) {
+    console.error("Error initiating forgot password: ", error);
+    throw error;
+  }
+};
+
+export const confirmForgotPassword = async (email: string, code: string, newPassword: string) => {
+  const params = {
+    ClientId: config.clientId,
+    Username: email,
+    ConfirmationCode: code,
+    Password: newPassword,
+  };
+  try {
+    const command = new ConfirmForgotPasswordCommand(params);
+    const response = await cognitoClient.send(command);
+    console.log("Password reset successfully: ", response);
+    return response;
+  } catch (error) {
+    console.error("Error confirming new password: ", error);
     throw error;
   }
 };

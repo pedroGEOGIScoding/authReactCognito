@@ -1,8 +1,7 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: Apache-2.0
+// LoginPage.jsx
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { signIn, signUp } from './authService';
 
 const LoginPage = () => {
@@ -12,7 +11,7 @@ const LoginPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignIn = async (e: { preventDefault: () => void; }) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     try {
       const session = await signIn(email, password);
@@ -32,7 +31,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleSignUp = async (e: { preventDefault: () => void; }) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert('Passwords do not match');
@@ -90,7 +89,8 @@ const LoginPage = () => {
       </form>
       <button onClick={() => setIsSignUp(!isSignUp)}>
         {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-      </button>
+      </button><br/>
+      <Link to="/forgot">Forgot Password?</Link>
     </div>
   );
 };
